@@ -1,0 +1,95 @@
+kind: pipeline
+name: default
+
+clone:
+  depth: 10
+
+steps:
+# 开发版
+- name: docker-${DRONE_BRANCH}
+  image: plugins/docker:18.09
+  settings:
+    username: drone
+    password:
+      from_secret: DOCKER_PASSWORD
+    registry: 192.168.41.34
+    repo: 192.168.41.34/test/demo
+    insecure: true
+    debug: true
+    dockerfile: Dockerfile
+    tags:
+      - canary
+  when:
+    branch:
+      - master
+      - dev
+    event:
+      - push
+
+# 稳定版
+- name: docker-release
+  image: plugins/docker:18.09
+  settings:
+    username: drone
+    password:
+      from_secret: DOCKER_PASSWORD
+    registry: 192.168.41.34
+    repo: 192.168.41.34/test/demo
+    insecure: true
+    dockerfile: Dockerfile
+    tags:
+      - ${DRONE_TAG}
+      - latest
+  when:
+    event:
+      - tag
+
+# 开发版部署在192.168.41.35
+- name: deploy-${DRONE_BRANCH}
+  image: appleboy/drone-ssh 
+  settings:
+    host: 
+       - 192.168.41.35
+    username: root
+    password:
+      from_secret: HOST_PASSWORD
+    port: 22
+    command_timeout: 2m 
+    script:
+       - echo "deploy ssh!"
+       - name=test-demo
+       - image=192.168.41.34/test/demo:canary
+       - echo ${DRONE_BRANCH}
+       - docker pull $image
+       - docker rm -f test-demo || true
+       - docker image prune -f
+       - docker run --name=$name -d -p 8001:8080 $image
+  when:
+    branch:
+      - master
+      - dev
+    event:
+      - push
+
+# 稳定版部署在192.168.41.36
+- name: deploy-release
+  image: appleboy/drone-ssh
+  settings:
+    host: 
+       - 192.168.41.36
+    username: root
+    password:
+      from_secret: HOST_PASSWORD
+    port: 22
+    command_timeout: 2m 
+    script:
+       - echo "deploy ssh!"
+       - name=demo-test
+       - image=192.168.41.34/test/demo:latest
+       - docker pull $image
+       - docker rm -f test-demo || true
+       - docker image prune -f
+       - docker run --name=$name -d -p 8001:8080 $image
+  when:
+    event:
+      - tag

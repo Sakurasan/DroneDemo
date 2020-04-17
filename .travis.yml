@@ -1,0 +1,40 @@
+language: go
+
+go:
+    - 1.13.6
+
+before_install:
+    - sudo apt-get update -qq
+
+script:
+    - go get -v github.com/Sakurasan/DroneDemo
+    - echo $GOPATH
+    - echo $PWD
+    - cd $GOPATH/src
+    - mv $GOPATH/src/github.com/Sakurasan/DroneDemo $GOPATH/src/
+    - echo $PWD
+    - cd ./DroneDemo/
+    - go build -v
+
+before_deploy:
+    - sudo apt-get -qq update
+    - sudo apt-get install -y dos2unix
+    - GOARCH=amd64 GOOS=linux   go build -o DroneDemo-linux-amd64
+    - GOARCH=amd64 GOOS=darwin  go build -o DroneDemo-darwin-amd64
+    - GOARCH=amd64 GOOS=windows go build -o DroneDemo-windows-amd64.exe
+    - zip -r DroneDemo-linux-amd64.zip DroneDemo-linux-amd64
+    - zip -r DroneDemo-darwin-amd64.zip DroneDemo-darwin-amd64 
+    - zip -r DroneDemo-windows-amd64.zip DroneDemo-windows-amd64.exe
+
+deploy:
+    provider: releases
+    api_key: $CI_USER_TOKEN
+    skip_cleanup: true 
+    file: 
+        - DroneDemo-linux-amd64.zip
+        - DroneDemo-darwin-amd64.zip
+        - DroneDemo-windows-amd64.zip
+    skip_cleanup: true 
+    on: 
+        tags: true
+    
