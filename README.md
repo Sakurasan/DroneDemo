@@ -21,4 +21,9 @@ deploy:
   skip_cleanup: true
 ```
 
+## GitHub actions
+http://www.ruanyifeng.com/blog/2019/09/getting-started-with-github-actions.html
+
 ## Drone
+
+https://www.cntofu.com/book/139/cases/ci/drone.md

@@ -1,11 +1,12 @@
-FROM golang:1.13 as builder
-WORKDIR /build
-COPY . .
-RUN CGO_ENABLED=0 GOPROXY=http://goproxy.cn go build -o DroneDemo
+FROM golang:alpine as builder
+WORKDIR /build/DroneDemo
+COPY . /build/DroneDemo
+RUN CGO_ENABLED=0 GOPROXY=http://goproxy.cn go build -v
 
 FROM alpine:3.10 as runner
 LABEL description="drone test"
 WORKDIR /app
-COPY --from=builder /build/DroneDemo /app/
+COPY --from=builder /build/DroneDemo /app/DroneDemo/
 EXPOSE 9000
-ENTRYPOINT [./DroneDemo]
+
+ENTRYPOINT ["/app/DroneDemo/DroneDemo"]
