@@ -25,8 +25,12 @@ before_deploy:
     - zip -r DroneDemo-linux-amd64.zip DroneDemo-linux-amd64
     - zip -r DroneDemo-darwin-amd64.zip DroneDemo-darwin-amd64 
     - zip -r DroneDemo-windows-amd64.zip DroneDemo-windows-amd64.exe
+    - echo "before_deploy"
+    - echo $PWD
 
 deploy:
+    -echo "deploy"
+    - echo $PWD
     provider: releases
     api_key: $CI_USER_TOKEN
     skip_cleanup: true 
