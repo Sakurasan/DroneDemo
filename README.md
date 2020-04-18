@@ -4,6 +4,16 @@ http://gitea.com
 
 https://docs.travis-ci.com/user/deployment/releases/
 
+<p align="center">
+<br><br>
+<br><br>
+<a title="Build Status" target="_blank" href="https://travis-ci.org/Sakurasan/DroneDemo"><img src="https://img.shields.io/travis/Sakurasan/DroneDemo.svg?branch=master&style=flat-square?label=Build&logo=travis"></a>
+<a title="Docker Image CI" target="_blank" href="https://github.com/Sakurasan/DroneDemo/actions"><img src="https://img.shields.io/github/workflow/status/Sakurasan/DroneDemo/Docker%20Image%20CI?label=Actions&logo=github&style=flat-square"></a>
+<a title="Docker Pulls" target="_blank" href="https://hub.docker.com/repository/docker/goenv/hello"><img src="https://img.shields.io/docker/pulls/goenv/hello.svg?logo=docker&label=docker&style=flat-square"></a>
+
+
+</p>
+
 ## Travis Ci
 
 apt install ruby ruby-dev
