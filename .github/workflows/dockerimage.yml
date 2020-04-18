@@ -1,0 +1,20 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: 
+      - master
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: |
+        docker login --username=${{ secrets.DOCKER_HUB_USER }} --password=${{ secrets.DOCKER_HUB_PWD }}
+        docker build -t goenv/hello:latest .
+        docker push goenv/hello
